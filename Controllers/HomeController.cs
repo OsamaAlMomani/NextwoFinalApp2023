@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NextwoFinalApp2023.Data;
 using NextwoFinalApp2023.Models;
+using NextwoFinalApp2023.Models.DataModel;
 using System.Diagnostics;
 
 namespace NextwoFinalApp2023.Controllers
@@ -7,15 +9,24 @@ namespace NextwoFinalApp2023.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly FinalDbContext db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,FinalDbContext db)
         {
+            this.db = db;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View();
+            IndexDataModel model = new IndexDataModel
+            {
+                courses = db.Courses.ToList(),
+                blogs = db.Blogs.ToList(),
+                instructors = db.Instructors.ToList(),
+                partners = db.Partners.ToList(),    
+            };
+            return View(model);
         }
 
         public IActionResult Privacy()
